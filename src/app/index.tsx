@@ -10,7 +10,7 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <View style={styles.content.contentHeader}>
+        <View style={styles.contentHeader}>
           <TextInput />
           <TouchableOpacity>
             <Text>++++++</Text>
@@ -29,5 +29,11 @@ export const styles = StyleSheet.create({
     backgroundColor: "#a283c6",
   },
 
-  content: {},
+  content: {
+    backgroundColor: "",
+    flex: 1,
+    width: "100%",
+    borderRadius: 20,
+  },
+  contentHeader: {},
 });
