@@ -25,15 +25,10 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <View style={styles.contentHeader}>
-          <TextInput
-            onChangeText={setTask}
-            style={styles.input}
-            placeholder="Adicionar tarefa..."
-            placeholderTextColor="#FFF"
-          />
-          <TouchableOpacity onPress={addTotask} style={styles.button}>
-            <Text style={styles.ButtonText}>+</Text>
+        <View style={styles.content.contentHeader}>
+          <TextInput />
+          <TouchableOpacity>
+            <Text>++++++</Text>
           </TouchableOpacity>
         </View>
 
@@ -99,29 +94,5 @@ export const styles = StyleSheet.create({
     color: "#ffffff",
   },
 
-  button: {
-    borderRadius: 10,
-    padding: 10,
-    backgroundColor: "#9e78cf",
-  },
-
-  textCardList: {
-    color: "#9e78cf",
-  },
-
-  card: {
-    padding: 10,
-    backgroundColor: "#15101c",
-    borderRadius: 10,
-    flexDirection: "row",
-    gap: 25,
-    elevation: 5,
-    marginVertical: 10,
-    justifyContent: "space-between",
-  },
-
-  iconCardList: {
-    flexDirection: "row",
-    gap: 5,
-  },
+  content: {},
 });
