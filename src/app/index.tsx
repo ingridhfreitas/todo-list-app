@@ -4,7 +4,9 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Pressable
 } from "react-native";
+import { Link, Stack } from "expo-router";
 
 export default function Index() {
   return (
@@ -14,6 +16,9 @@ export default function Index() {
           <TextInput />
           <TouchableOpacity>
             <Text>++++++</Text>
+            <Pressable>
+              <Link href={"/newTask"}>Link para nova tarefa</Link>
+            </Pressable>
           </TouchableOpacity>
         </View>
       </View>
