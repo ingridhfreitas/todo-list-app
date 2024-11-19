@@ -5,11 +5,12 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Pressable
+  Pressable,
 } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useState } from "react";
+import { Link } from "expo-router";
 
 export default function Index() {
   const [task, setTask] = useState("");
@@ -26,10 +27,15 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <View style={styles.content.contentHeader}>
-          <TextInput />
-          <TouchableOpacity>
-            <Text>++++++</Text>
+        <View style={styles.contentHeader}>
+          <TextInput
+            onChangeText={setTask}
+            style={styles.input}
+            placeholder="Adicionar nova tarefa"
+            placeholderTextColor="#FFFFFF"
+          />
+          <TouchableOpacity onPress={addTotask} style={styles.button}>
+            <Text style={styles.ButtonText}>+</Text>
             <Pressable>
               <Link href={"/newTask"}>Link para nova tarefa</Link>
             </Pressable>
@@ -44,7 +50,7 @@ export default function Index() {
               <View style={styles.iconCardList}>
                 <MaterialIcons name="done" size={24} color="#9e78cf" />
                 <TouchableOpacity onPress={() => removeFromTask(index)}>
-                  <MaterialIcons
+                  <MaterialCommunityIcons
                     name="delete-outline"
                     size={24}
                     color="#9e78cf"
@@ -98,5 +104,29 @@ export const styles = StyleSheet.create({
     color: "#ffffff",
   },
 
-  content: {},
+  button: {
+    borderRadius: 10,
+    padding: 15,
+    backgroundColor: "#9e78cf",
+  },
+
+  textCardList: {
+    color: "#9e78cf",
+  },
+
+  card: {
+    padding: 10,
+    backgroundColor: "#15101c",
+    borderRadius: 10,
+    flexDirection: "row",
+    gap: 25,
+    elevation: 5,
+    marginVertical: 10,
+    justifyContent: "space-between",
+  },
+
+  iconCardList: {
+    flexDirection: "row",
+    gap: 5,
+  },
 });
