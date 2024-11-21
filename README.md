@@ -1,50 +1,42 @@
-# Welcome to your Expo app 👋
+Gerenciador de Tarefas 📋
+Este projeto é um aplicativo de gerenciamento de tarefas desenvolvido em React Native durante a disciplina de Dispositivos Móveis no semestre 2024.2. O aplicativo permite adicionar, marcar como concluídas e excluir tarefas.
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+🚀 Funcionalidades
+Adicionar Tarefas: Crie novas tarefas rapidamente.
+Marcar como Concluída: Atualize o status de uma tarefa.
+Excluir Tarefas: Remova tarefas desnecessárias.
+Interface Simples e Intuitiva: Design minimalista com navegação prática.
+🛠️ Tecnologias Utilizadas
+React Native: Framework para desenvolvimento mobile.
+Expo Router: Gerenciamento de rotas no aplicativo.
+Context API: Gerenciamento de estado global.
+Expo Vector Icons: Ícones para aprimorar a interface.
+📂 Estrutura do Projeto
+plaintext
+Copiar código
+/
+├── context/
+│   └── TaskContext.js   # Gerenciamento do estado global das tarefas
+├── pages/
+│   ├── Index.js         # Tela principal de exibição de tarefas
+│   └── NewTask.js       # Tela para adicionar novas tarefas
+└── App.js               # Arquivo principal do aplicativo
+🖼️ Prévia
+A tela principal exibe uma lista de tarefas com opções para:
 
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Marcar tarefas como concluídas (ícone de checkbox).
+Excluir tarefas (ícone de lixeira).
+Adicionar novas tarefas por meio de um botão.
+📦 Como Executar
+Clone o repositório:
+bash
+Copiar código
+git clone https://github.com/seu-usuario/seu-repositorio.git
+Instale as dependências:
+bash
+Copiar código
+npm install
+Execute o projeto:
+bash
+Copiar código
+npx expo start
