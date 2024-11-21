@@ -10,28 +10,22 @@ import {
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useState } from "react";
-import { Link } from "expo-router";
-import { useTaskContext } from '../context/TaskContext';
+import { useRouter } from "expo-router";
+import { useTaskContext } from "../context/TaskContext";
 
 export default function Index() {
   const { tasks, deleteTask } = useTaskContext();
-  const [task, setTask] = useState("");
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         <View style={styles.contentHeader}>
-          <TextInput
-            onChangeText={setTask}
-            style={styles.input}
-            placeholder="Adicionar nova tarefa"
-            placeholderTextColor="#FFFFFF"
-          />
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.ButtonText}>+</Text>
-            <Pressable>
-              <Link href={"/newTask"}>Nova Tarefa</Link>
-            </Pressable>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => router.push("/newTask")}
+          >
+            <Text style={styles.ButtonText}>+ Adicionar tarefa</Text>
           </TouchableOpacity>
         </View>
 
@@ -42,10 +36,10 @@ export default function Index() {
             <View style={styles.card}>
               <Text style={styles.textCardList}>{item.title}</Text>
               <View style={styles.iconCardList}>
-                <MaterialIcons 
-                  name={item.completed ? "done-all" : "done"} 
-                  size={24} 
-                  color="#9e78cf" 
+                <MaterialIcons
+                  name={item.completed ? "done-all" : "done"}
+                  size={24}
+                  color="#9e78cf"
                 />
                 <TouchableOpacity onPress={() => deleteTask(item.id)}>
                   <MaterialCommunityIcons
