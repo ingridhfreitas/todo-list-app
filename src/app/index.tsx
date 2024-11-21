@@ -11,18 +11,11 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useState } from "react";
 import { Link } from "expo-router";
+import { useTaskContext } from '../context/TaskContext';
 
 export default function Index() {
+  const { tasks, deleteTask } = useTaskContext();
   const [task, setTask] = useState("");
-  const [listTask, setListTask] = useState([""]);
-
-  function addTotask() {
-    setListTask([...listTask, task]);
-  }
-
-  function removeFromTask(index: any) {
-    setListTask(listTask.filter((_, i) => i !== index));
-  }
 
   return (
     <View style={styles.container}>
@@ -34,22 +27,27 @@ export default function Index() {
             placeholder="Adicionar nova tarefa"
             placeholderTextColor="#FFFFFF"
           />
-          <TouchableOpacity onPress={addTotask} style={styles.button}>
+          <TouchableOpacity style={styles.button}>
             <Text style={styles.ButtonText}>+</Text>
             <Pressable>
-              <Link href={"/newTask"}>Link para nova tarefa</Link>
+              <Link href={"/newTask"}>Nova Tarefa</Link>
             </Pressable>
           </TouchableOpacity>
         </View>
 
         <FlatList
-          data={listTask}
+          data={tasks}
+          keyExtractor={(item) => item.id}
           renderItem={({ item, index }) => (
             <View style={styles.card}>
-              <Text style={styles.textCardList}>{item}</Text>
+              <Text style={styles.textCardList}>{item.title}</Text>
               <View style={styles.iconCardList}>
-                <MaterialIcons name="done" size={24} color="#9e78cf" />
-                <TouchableOpacity onPress={() => removeFromTask(index)}>
+                <MaterialIcons 
+                  name={item.completed ? "done-all" : "done"} 
+                  size={24} 
+                  color="#9e78cf" 
+                />
+                <TouchableOpacity onPress={() => deleteTask(item.id)}>
                   <MaterialCommunityIcons
                     name="delete-outline"
                     size={24}
