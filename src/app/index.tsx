@@ -2,53 +2,62 @@ import {
   FlatList,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
-  Pressable,
 } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { useState } from "react";
 import { useRouter } from "expo-router";
 import { useTaskContext } from "../context/TaskContext";
 
 export default function Index() {
-  const { tasks, deleteTask } = useTaskContext();
   const router = useRouter();
+  const { tasks, deleteTask, toggleTaskCompletion } = useTaskContext();
 
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <View style={styles.contentHeader}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => router.push("/newTask")}
-          >
-            <Text style={styles.ButtonText}>+ Adicionar tarefa</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push("/newTask")}
+        >
+          <Text style={styles.ButtonText}>+ Adicionar tarefa</Text>
+        </TouchableOpacity>
 
         <FlatList
           data={tasks}
           keyExtractor={(item) => item.id}
-          renderItem={({ item, index }) => (
-            <View style={styles.card}>
-              <Text style={styles.textCardList}>{item.title}</Text>
-              <View style={styles.iconCardList}>
-                <MaterialIcons
-                  name={item.completed ? "done-all" : "done"}
-                  size={24}
-                  color="#9e78cf"
-                />
-                <TouchableOpacity onPress={() => deleteTask(item.id)}>
-                  <MaterialCommunityIcons
-                    name="delete-outline"
+          renderItem={({ item }) => (
+            <View style={[styles.card, item.completed && styles.completedCard]}>
+              <View style={styles.taskRow}>
+                <TouchableOpacity
+                  onPress={() => toggleTaskCompletion(item.id)}
+                  style={styles.checkbox}
+                >
+                  <MaterialIcons
+                    name={
+                      item.completed ? "check-box" : "check-box-outline-blank"
+                    }
                     size={24}
                     color="#9e78cf"
                   />
                 </TouchableOpacity>
+                <Text
+                  style={[
+                    styles.textCardList,
+                    item.completed && styles.completedText,
+                  ]}
+                >
+                  {item.title}
+                </Text>
               </View>
+              <TouchableOpacity onPress={() => deleteTask(item.id)}>
+                <MaterialCommunityIcons
+                  name="delete-outline"
+                  size={24}
+                  color="#9e78cf"
+                />
+              </TouchableOpacity>
             </View>
           )}
         />
@@ -120,5 +129,20 @@ export const styles = StyleSheet.create({
   iconCardList: {
     flexDirection: "row",
     gap: 5,
+  },
+
+  taskRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+  },
+  checkbox: {
+    marginRight: 10,
+  },
+  completedCard: {
+    opacity: 0.7,
+  },
+  completedText: {
+    textDecorationLine: "line-through",
   },
 });
