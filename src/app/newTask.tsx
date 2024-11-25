@@ -9,12 +9,13 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useTaskContext } from "../context/TaskContext";
-import { useRouter } from "expo-router";
+import { useRouter, Stack } from "expo-router";
 
 export default function NewTask() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [dueDate, setDueDate] = useState<Date | undefined>();
+  const [dueDate, setDueDate] = useState<Date>(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [priority, setPriority] = useState<"baixa" | "média" | "alta">("média");
 
   const { addTask } = useTaskContext();
@@ -37,9 +38,28 @@ export default function NewTask() {
     router.push("/");
   };
 
+  const onChangeDueDate = (event: any, selectedDate?: Date) => {
+    setShowDatePicker(false);
+    if (selectedDate) {
+      setDueDate(selectedDate);
+    }
+  };
+
+  const showDatepicker = () => {
+    setShowDatePicker(true);
+  };
+
+  const formatDate = (date?: Date) => {
+    if (!date) return "Selecionar data";
+    return date.toLocaleDateString('pt-BR');
+  };
+
   return (
+    <>
+    <Stack.Screen options={{ headerShown: false }} />
     <ScrollView style={styles.container}>
       <View style={styles.content}>
+          
         <Text style={styles.title}>Nova Tarefa</Text>
 
         <TextInput
@@ -61,14 +81,23 @@ export default function NewTask() {
 
         <View style={styles.dateContainer}>
           <Text style={styles.label}>Data de Conclusão:</Text>
-          <DateTimePicker
-            value={dueDate || new Date()}
-            mode="date"
-            display="calendar"
-            onChange={(event, selectedDate) => {
-              setDueDate(selectedDate);
-            }}
-          />
+          <TouchableOpacity 
+            onPress={showDatepicker}
+            style={[styles.input, styles.selectButton]}
+          >
+            <Text style={styles.selectButtonText}>
+              {formatDate(dueDate)}
+            </Text>
+          </TouchableOpacity>
+
+          {showDatePicker && (
+            <DateTimePicker
+              value={dueDate || new Date()}
+              mode="date"
+              display="calendar"
+              onChange={onChangeDueDate}
+            />
+          )}
         </View>
 
         <View style={styles.priorityContainer}>
@@ -92,8 +121,13 @@ export default function NewTask() {
         <TouchableOpacity style={styles.saveButton} onPress={handleAddTask}>
           <Text style={styles.saveButtonText}>Salvar Tarefa</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={styles.backButton} onPress={router.back}>
+            <Text style={styles.backButtonText}>Voltar</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
+    </>
   );
 }
 
@@ -102,9 +136,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#0d0714",
   },
+  
   content: {
     padding: 20,
   },
+
+  
   title: {
     color: "#9e78cf",
     fontSize: 24,
@@ -155,9 +192,24 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
+    marginBottom: 16
   },
   saveButtonText: {
     color: "#ffffff",
     fontWeight: "bold",
   },
+  backButton: {
+    //backgroundColor: "#9e78cf",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    borderColor: "#9e78cf",
+    borderWidth: 1,
+    marginBottom: 15,
+  },
+  backButtonText: {
+    color: "#ffffff",
+    fontWeight: "bold",
+  },
+
 });
