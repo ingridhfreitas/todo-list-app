@@ -25,7 +25,7 @@ const Layout = () => {
       onPress={() => router.back()}
       style={{ 
         marginLeft: 8,
-        padding: 4  // Área de toque maior para melhor usabilidade
+        padding: 4  
       }}
     >
       <ChevronLeft size={24} color="#9e78cf" />
