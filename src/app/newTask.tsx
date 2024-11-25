@@ -6,40 +6,63 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Alert,
+  Platform,
 } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 import { useTaskContext } from "../context/TaskContext";
 import { useRouter, Stack } from "expo-router";
+
+// Definindo tipos
+type Priority = "baixa" | "média" | "alta";
+
+interface Task {
+  title: string;
+  description: string;
+  dueDate: Date;
+  priority: Priority;
+  completed: boolean;
+}
 
 export default function NewTask() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [dueDate, setDueDate] = useState<Date>(new Date());
+  const [dueDate, setDueDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [priority, setPriority] = useState<"baixa" | "média" | "alta">("média");
+  const [priority, setPriority] = useState<Priority>("média");
 
   const { addTask } = useTaskContext();
   const router = useRouter();
 
   const handleAddTask = () => {
     if (!title.trim()) {
-      alert("Por favor, insira um título para a tarefa");
+      Alert.alert("Erro", "Por favor, insira um título para a tarefa");
       return;
     }
 
-    addTask({
-      title,
-      description,
+    const newTask: Task = {
+      title: title.trim(),
+      description: description.trim(),
       dueDate,
       priority,
       completed: false,
-    });
+    };
 
-    router.push("/");
+    try {
+      addTask(newTask);
+      router.push("/");
+    } catch (error) {
+      Alert.alert(
+        "Erro",
+        "Não foi possível adicionar a tarefa. Tente novamente."
+      );
+    }
   };
 
-  const onChangeDueDate = (event: any, selectedDate?: Date) => {
-    setShowDatePicker(false);
+  const onChangeDueDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    setShowDatePicker(Platform.OS === "ios");
     if (selectedDate) {
       setDueDate(selectedDate);
     }
@@ -49,84 +72,130 @@ export default function NewTask() {
     setShowDatePicker(true);
   };
 
-  const formatDate = (date?: Date) => {
-    if (!date) return "Selecionar data";
-    return date.toLocaleDateString('pt-BR');
+  const formatDate = (date: Date): string => {
+    return date.toLocaleDateString("pt-BR");
   };
+
+  const renderDatePicker = () => {
+    if (Platform.OS === "android") {
+      return (
+        showDatePicker && (
+          <DateTimePicker
+            value={dueDate}
+            mode="date"
+            display="default"
+            onChange={onChangeDueDate}
+            minimumDate={new Date()}
+          />
+        )
+      );
+    }
+
+    return (
+      showDatePicker && (
+        <DateTimePicker
+          value={dueDate}
+          mode="date"
+          display="spinner"
+          onChange={onChangeDueDate}
+          minimumDate={new Date()}
+        />
+      )
+    );
+  };
+
+  const priorityLevels: Priority[] = ["baixa", "média", "alta"];
 
   return (
     <>
-    <Stack.Screen options={{ headerShown: false }} />
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-          
-        <Text style={styles.title}>Nova Tarefa</Text>
+      <Stack.Screen
+        options={{
+          headerShown: false,
+          contentStyle: { backgroundColor: "#0d0714" },
+        }}
+      />
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+      >
+        <View style={styles.content}>
+          <Text style={styles.title}>Nova Tarefa</Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Título da Tarefa"
-          placeholderTextColor="#9e78cf"
-          value={title}
-          onChangeText={setTitle}
-        />
+          <TextInput
+            style={styles.input}
+            placeholder="Título da Tarefa"
+            placeholderTextColor="#9e78cf"
+            value={title}
+            onChangeText={setTitle}
+            maxLength={50}
+          />
 
-        <TextInput
-          style={[styles.input, styles.multilineInput]}
-          placeholder="Descrição (opcional)"
-          placeholderTextColor="#9e78cf"
-          multiline
-          value={description}
-          onChangeText={setDescription}
-        />
+          <TextInput
+            style={[styles.input, styles.multilineInput]}
+            placeholder="Descrição (opcional)"
+            placeholderTextColor="#9e78cf"
+            multiline
+            value={description}
+            onChangeText={setDescription}
+            maxLength={200}
+          />
 
-        <View style={styles.dateContainer}>
-          <Text style={styles.label}>Data de Conclusão:</Text>
-          <TouchableOpacity 
-            onPress={showDatepicker}
-            style={[styles.input, styles.selectButton]}
+          <View style={styles.dateContainer}>
+            <Text style={styles.label}>Data de Conclusão:</Text>
+            <TouchableOpacity
+              onPress={showDatepicker}
+              style={[styles.input, styles.dateButton]}
+            >
+              <Text style={styles.dateButtonText}>{formatDate(dueDate)}</Text>
+            </TouchableOpacity>
+
+            {renderDatePicker()}
+          </View>
+
+          <View style={styles.priorityContainer}>
+            <Text style={styles.label}>Prioridade:</Text>
+            <View style={styles.priorityButtonsContainer}>
+              {priorityLevels.map((priorityLevel) => (
+                <TouchableOpacity
+                  key={priorityLevel}
+                  style={[
+                    styles.priorityButton,
+                    priority === priorityLevel && styles.selectedPriority,
+                  ]}
+                  onPress={() => setPriority(priorityLevel)}
+                  activeOpacity={0.7}
+                >
+                  <Text
+                    style={[
+                      styles.priorityButtonText,
+                      priority === priorityLevel && styles.selectedPriorityText,
+                    ]}
+                  >
+                    {priorityLevel.charAt(0).toUpperCase() +
+                      priorityLevel.slice(1)}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={handleAddTask}
+            activeOpacity={0.7}
           >
-            <Text style={styles.selectButtonText}>
-              {formatDate(dueDate)}
-            </Text>
+            <Text style={styles.saveButtonText}>Salvar Tarefa</Text>
           </TouchableOpacity>
 
-          {showDatePicker && (
-            <DateTimePicker
-              value={dueDate || new Date()}
-              mode="date"
-              display="calendar"
-              onChange={onChangeDueDate}
-            />
-          )}
-        </View>
-
-        <View style={styles.priorityContainer}>
-          <Text style={styles.label}>Prioridade:</Text>
-          {(["baixa", "média", "alta"] as const).map((priorityLevel) => (
-            <TouchableOpacity
-              key={priorityLevel}
-              style={[
-                styles.priorityButton,
-                priority === priorityLevel && styles.selectedPriority,
-              ]}
-              onPress={() => setPriority(priorityLevel)}
-            >
-              <Text style={styles.priorityButtonText}>
-                {priorityLevel.charAt(0).toUpperCase() + priorityLevel.slice(1)}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        <TouchableOpacity style={styles.saveButton} onPress={handleAddTask}>
-          <Text style={styles.saveButtonText}>Salvar Tarefa</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.backButton} onPress={router.back}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+            activeOpacity={0.7}
+          >
             <Text style={styles.backButtonText}>Voltar</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </>
   );
 }
@@ -134,18 +203,19 @@ export default function NewTask() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0d0714",
   },
-  
+  contentContainer: {
+    flexGrow: 1,
+  },
   content: {
     padding: 20,
+    flex: 1,
   },
-
-  
   title: {
     color: "#9e78cf",
     fontSize: 24,
-    marginBottom: 20,
+    fontWeight: "bold",
+    marginVertical: 20,
     textAlign: "center",
   },
   input: {
@@ -154,8 +224,9 @@ const styles = StyleSheet.create({
     borderColor: "#9e78cf",
     borderWidth: 1,
     borderRadius: 10,
-    padding: 10,
+    padding: 15,
     marginBottom: 15,
+    fontSize: 16,
   },
   multilineInput: {
     height: 100,
@@ -166,19 +237,32 @@ const styles = StyleSheet.create({
   },
   label: {
     color: "#9e78cf",
-    marginBottom: 5,
+    marginBottom: 8,
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  dateButton: {
+    justifyContent: "center",
+  },
+  dateButtonText: {
+    color: "#ffffff",
+    fontSize: 16,
   },
   priorityContainer: {
+    marginBottom: 20,
+  },
+  priorityButtonsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 20,
   },
   priorityButton: {
     backgroundColor: "#15101c",
-    padding: 10,
+    padding: 12,
     borderRadius: 10,
     flex: 1,
     marginHorizontal: 5,
+    borderWidth: 1,
+    borderColor: "#9e78cf",
   },
   selectedPriority: {
     backgroundColor: "#9e78cf",
@@ -186,20 +270,26 @@ const styles = StyleSheet.create({
   priorityButtonText: {
     color: "#ffffff",
     textAlign: "center",
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  selectedPriorityText: {
+    color: "#15101c",
+    fontWeight: "bold",
   },
   saveButton: {
     backgroundColor: "#9e78cf",
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
-    marginBottom: 16
+    marginBottom: 16,
   },
   saveButtonText: {
     color: "#ffffff",
     fontWeight: "bold",
+    fontSize: 16,
   },
   backButton: {
-    //backgroundColor: "#9e78cf",
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
@@ -210,6 +300,6 @@ const styles = StyleSheet.create({
   backButtonText: {
     color: "#ffffff",
     fontWeight: "bold",
+    fontSize: 16,
   },
-
 });
