@@ -15,7 +15,6 @@ import DateTimePicker, {
 import { useTaskContext } from "../context/TaskContext";
 import { useRouter, Stack } from "expo-router";
 
-// Definindo tipos
 type Priority = "baixa" | "média" | "alta";
 
 interface Task {
@@ -52,7 +51,7 @@ export default function NewTask() {
 
     try {
       addTask(newTask);
-      router.push("/");
+      router.push("../newTask");
     } catch (error) {
       Alert.alert(
         "Erro",
