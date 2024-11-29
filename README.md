@@ -35,10 +35,11 @@ O aplicativo permite que os usuários criem, editem e organizem suas tarefas em 
 📦 app/
  ┣ 📂 images/
  ┃ ┗ 🖼 img.png
- ┣ 📜 InitialScreen.js
- ┣ 📜 Layout.js
- ┣ 📜 context/
- ┃ ┗ TaskContext.js
+ ┣ 📜 _layout.tsx
+ ┣ 📜 index.tsx
+ ┣ 📜 newTask.tsx
+ ┣ 📜 task.tsx
+ ┃ ┗ TaskContext.tsx
 ```
 
 ### **Componentes principais:**
