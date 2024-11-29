@@ -1,52 +1,81 @@
+# 📋 To-Do List App 
 
-# Gerenciador de Tarefas 📋
+Este projeto é um aplicativo de lista de tarefas desenvolvido em **React Native**, como parte da disciplina de **Dispositivos Móveis (2024.2)**. O objetivo do app é ajudar na organização e gerenciamento de atividades diárias de forma prática e intuitiva.
 
-Este projeto é um aplicativo de gerenciamento de tarefas desenvolvido em **React Native** durante a disciplina de **Dispositivos Móveis** no semestre 2024.2. O aplicativo permite adicionar, marcar como concluídas e excluir tarefas.
+---
 
-## 🚀 Funcionalidades
+## 🎯 **Objetivo do Projeto**
 
-- **Adicionar Tarefas:** Crie novas tarefas rapidamente.
-- **Marcar como Concluída:** Atualize o status de uma tarefa.
-- **Excluir Tarefas:** Remova tarefas desnecessárias.
-- **Interface Simples e Intuitiva:** Design minimalista com navegação prática.
+O aplicativo permite que os usuários criem, editem e organizem suas tarefas em um só lugar, com uma interface simples e fluida, focada na produtividade.
 
-## 🛠️ Tecnologias Utilizadas
+---
 
-- **React Native**: Framework para desenvolvimento mobile.
-- **Expo Router**: Gerenciamento de rotas no aplicativo.
-- **Context API**: Gerenciamento de estado global.
-- **Expo Vector Icons**: Ícones para aprimorar a interface.
+## 💻 **Funcionalidades**
 
-## 📂 Estrutura do Projeto
+- **Adicionar novas tarefas:** Crie tarefas rapidamente para gerenciar seu dia.
+- **Editar tarefas existentes:** Atualize informações de uma tarefa sempre que necessário.
+- **Excluir tarefas:** Remova tarefas concluídas ou não desejadas.
+- **Navegação simples:** Utiliza botões e ícones para facilitar o uso.
+- **Interface responsiva e moderna:** Com foco em acessibilidade e design clean.
+
+---
+
+## 🛠 **Tecnologias Utilizadas**
+
+- **React Native**: Framework principal para desenvolvimento.
+- **Expo Router**: Gerenciamento de rotas e navegação entre telas.
+- **Lucide-react-native**: Ícones personalizados e leves.
+- **Context API**: Gerenciamento global de estado para adicionar, editar e excluir tarefas.
+
+---
+
+## 📂 **Arquitetura do Projeto**
 
 ```plaintext
-/
-├── context/
-│   └── TaskContext.js   # Gerenciamento do estado global das tarefas
-├── pages/
-│   ├── Index.js         # Tela principal de exibição de tarefas
-│   └── NewTask.js       # Tela para adicionar novas tarefas
-└── App.js               # Arquivo principal do aplicativo
+📦 app/
+ ┣ 📂 images/
+ ┃ ┗ 🖼 img.png
+ ┣ 📜 InitialScreen.js
+ ┣ 📜 Layout.js
+ ┣ 📜 context/
+ ┃ ┗ TaskContext.js
 ```
 
-## 🖼️ Prévia
+### **Componentes principais:**
 
-A tela principal exibe uma lista de tarefas com opções para:
-- Marcar tarefas como concluídas (ícone de checkbox).
-- Excluir tarefas (ícone de lixeira).
-- Adicionar novas tarefas por meio de um botão.
+1. **InitialScreen.tsx**: Tela de boas-vindas com um botão que leva à criação de tarefas.
+2. **Layout.tsx**: Gerencia a navegação e o layout das telas, com um botão de retorno customizado.
+3. **TaskContext.tsx**: Contexto que gerencia o estado global das tarefas, permitindo a adição, edição e exclusão.
 
-## 📦 Como Executar
+---
+
+## 🎨 **Estilo e Navegação**
+
+- **Cores predominantes:** Roxo escuro e lilás, criando um visual moderno e elegante.
+- **Botão de navegação:** Ícone de retorno personalizado usando **Lucide-react-native**.
+- **Tela de edição:** Interface intuitiva para modificar tarefas.
+
+---
+
+## 🚀 **Como Executar o Projeto**
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/seu-usuario/seu-repositorio.git
+   git clone https://github.com/seu-usuario/nome-do-repositorio.git
    ```
+
 2. Instale as dependências:
    ```bash
    npm install
    ```
-3. Execute o projeto:
+
+3. Inicie o projeto:
    ```bash
-   npx expo start
+   npm start
    ```
+
+---
+
+## 📚 **Sobre a Disciplina**
+
+Este projeto foi desenvolvido como parte da disciplina de **Dispositivos Móveis (2024.2)**, focada no desenvolvimento de aplicativos móveis utilizando **React Native**, com práticas modernas de navegação e gerenciamento de estado.
