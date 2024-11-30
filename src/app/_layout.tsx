@@ -2,7 +2,7 @@ import { Stack } from "expo-router";
 import { TaskProvider } from "../context/TaskContext";
 import { TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import { ChevronLeft } from "lucide-react-native";
+// import { ChevronLeft } from "lucide-react-native";
 
 const Layout = () => {
   const router = useRouter();
@@ -28,7 +28,7 @@ const Layout = () => {
         padding: 4  
       }}
     >
-      <ChevronLeft size={24} color="#9e78cf" />
+      {/* <ChevronLeft size={24} color="#9e78cf" /> */}
     </TouchableOpacity>
   );
 
