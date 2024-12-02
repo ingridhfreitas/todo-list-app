@@ -12,6 +12,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { useTaskContext } from "../context/TaskContext";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export interface Task {
   id: string;
@@ -29,20 +30,39 @@ export default function Index() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [editedTitle, setEditedTitle] = useState<string>("");
+  const [editedDescription, setEditedDescription] = useState<string>("");
+  const [editedDueDate, setEditedDueDate] = useState<Date | undefined>(undefined);
+  const [editedPriority, setEditedPriority] = useState<Task['priority']>("baixa");
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const openEditModal = (task: Task) => {
     setEditingTask(task);
     setEditedTitle(task.title);
+    setEditedDescription(task.description || "");
+    setEditedDueDate(task.dueDate);
+    setEditedPriority(task.priority);
     setIsModalVisible(true);
   };
 
   const saveEditedTask = () => {
     if (editingTask && editedTitle.trim()) {
-      updateTask(editingTask.id, { title: editedTitle.trim() });
+      updateTask(editingTask.id, {
+        title: editedTitle.trim(),
+        description: editedDescription.trim(),
+        dueDate: editedDueDate,
+        priority: editedPriority,
+      });
       setIsModalVisible(false);
       setEditingTask(null);
-      setEditedTitle("");
+      resetForm();
     }
+  };
+
+  const resetForm = () => {
+    setEditedTitle("");
+    setEditedDescription("");
+    setEditedDueDate(undefined);
+    setEditedPriority("baixa");
   };
 
   return (
@@ -117,13 +137,54 @@ export default function Index() {
             <Text style={styles.modalTitle}>Editar Tarefa</Text>
             <TextInput
               style={styles.input}
-              placeholder="Editar tarefa"
+              placeholder="Título da tarefa"
               placeholderTextColor="#9e78cf"
               value={editedTitle}
               onChangeText={setEditedTitle}
-              returnKeyType="done"
-              onSubmitEditing={saveEditedTask}
             />
+            <TextInput
+              style={[styles.input, styles.textArea]}
+              placeholder="Descrição"
+              placeholderTextColor="#9e78cf"
+              value={editedDescription}
+              onChangeText={setEditedDescription}
+              multiline
+              numberOfLines={3}
+            />
+            <TouchableOpacity
+              style={styles.dateButton}
+              onPress={() => setShowDatePicker(true)}
+            >
+              <Text style={styles.dateButtonText}>
+                {editedDueDate 
+                  ? editedDueDate.toLocaleDateString()
+                  : "Selecionar Data"}
+              </Text>
+            </TouchableOpacity>
+            {showDatePicker && (
+              <DateTimePicker
+                value={editedDueDate || new Date()}
+                mode="date"
+                onChange={(event, date) => {
+                  setShowDatePicker(false);
+                  if (date) setEditedDueDate(date);
+                }}
+              />
+            )}
+            <View style={styles.priorityContainer}>
+              {["baixa", "média", "alta"].map((priority) => (
+                <TouchableOpacity
+                  key={priority}
+                  style={[
+                    styles.priorityButton,
+                    editedPriority === priority && styles.selectedPriority,
+                  ]}
+                  onPress={() => setEditedPriority(priority as Task['priority'])}
+                >
+                  <Text style={styles.priorityText}>{priority}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={[styles.modalButton, styles.saveButton]}
@@ -211,6 +272,7 @@ export const styles = StyleSheet.create({
     borderColor: "#9e78cf",
     color: "#ffffff",
     marginBottom: 15,
+    width: "100%",
   },
   modalOverlay: {
     flex: 1,
@@ -219,7 +281,8 @@ export const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalContent: {
-    width: "80%",
+    width: "90%",
+    maxHeight: "80%",
     backgroundColor: "#1d1825",
     borderRadius: 20,
     padding: 20,
@@ -257,5 +320,42 @@ export const styles = StyleSheet.create({
     color: "#9e78cf",
     textAlign: "center",
     marginTop: 20,
+  },
+  textArea: {
+    height: 100,
+    textAlignVertical: "top",
+    minHeight: 100,
+    maxHeight: 100,
+  },
+  dateButton: {
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: "#9e78cf",
+    padding: 10,
+    marginBottom: 15,
+  },
+  dateButtonText: {
+    color: "#9e78cf",
+  },
+  priorityContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 15,
+  },
+  priorityButton: {
+    flex: 1,
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: "#9e78cf",
+    marginHorizontal: 5,
+    alignItems: "center",
+  },
+  selectedPriority: {
+    backgroundColor: "#9e78cf",
+  },
+  priorityText: {
+    color: "#ffffff",
+    fontWeight: "bold",
   },
 });
